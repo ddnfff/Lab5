@@ -1,12 +1,12 @@
 package com.example.lab3
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
 class TaskAdapter(
@@ -32,22 +32,30 @@ class TaskAdapter(
         val task = tasks[position]
         holder.tvTask.text = task.title
         holder.cbDone.isChecked = task.isDone
-        holder.tvPriority.text = "Приоритет: ${task.priority}"
+
+        holder.tvPriority.text = when (task.priority) {
+            1 -> "Приоритет: 1"
+            2 -> "Приоритет: 2"
+            3 -> "Приоритет: 3"Ц
+            else -> "Приоритет: неизвестно"
+        }
 
         holder.cbDone.setOnClickListener {
-            onToggleClick(position)
+            onToggleClick(holder.adapterPosition)
         }
 
         holder.btnDelete.setOnClickListener {
-            onDeleteClick(position)
+            onDeleteClick(holder.adapterPosition)
         }
     }
 
-    override fun getItemCount() = tasks.size
+    override fun getItemCount(): Int = tasks.size
 
-    @SuppressLint("NotifyDataSetChanged")
     fun updateList(newList: List<Task>) {
+        val diffCallback = TaskDiffCallback(tasks, newList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
         tasks = newList
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 }
