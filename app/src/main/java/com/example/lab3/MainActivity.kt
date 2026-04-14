@@ -5,12 +5,14 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Spinner
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
@@ -35,14 +37,26 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
+        val etTask = findViewById<EditText>(R.id.etTask)
+
         viewModel.visibleTasks.observe(this) { taskList ->
             adapter.updateList(taskList)
         }
 
+        viewModel.messageEvent.observe(this) { event ->
+            event.getContentIfNotHandled()?.let { message ->
+                Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show()
+            }
+        }
+
         findViewById<Button>(R.id.btnAddTask).setOnClickListener {
-            val taskText = "Задача ${Random.nextInt(100)}"
+            val taskText = etTask.text.toString()
             val priority = Random.nextInt(1, 4)
             viewModel.addTask(taskText, priority)
+
+            if (taskText.isNotBlank()) {
+                etTask.text.clear()
+            }
         }
 
         val spinner = findViewById<Spinner>(R.id.spinnerFilter)

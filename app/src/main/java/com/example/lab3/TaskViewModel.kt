@@ -10,25 +10,34 @@ class TaskViewModel : ViewModel() {
     private val _visibleTasks = MutableLiveData<List<Task>>()
     val visibleTasks: LiveData<List<Task>> = _visibleTasks
 
+    private val _messageEvent = MutableLiveData<Event<String>>()
+    val messageEvent: LiveData<Event<String>> = _messageEvent
+
     private var currentFilter = TaskFilter.ALL
     private var currentSort = SortType.BY_DATE
 
     init {
         _allTasks.value = listOf(
-            Task("Купить", false, System.currentTimeMillis(), 2),
-            Task("Хранить", true, System.currentTimeMillis() - 10000, 3),
-            Task("Продать", false, System.currentTimeMillis() - 20000, 1)
+            Task("Купить молоко", false, System.currentTimeMillis(), 2),
+            Task("Сделать лабораторную", true, System.currentTimeMillis() - 10000, 1),
+            Task("Позвонить другу", false, System.currentTimeMillis() - 20000, 3)
         )
         updateTasks()
     }
 
     fun addTask(title: String, priority: Int = 1) {
+        if (title.isBlank()) {
+            _messageEvent.value = Event("Введите название задачи")
+            return
+        }
+
         val updated = _allTasks.value.orEmpty() + Task(
-            title = title,
+            title = title.trim(),
             isDone = false,
             createdAt = System.currentTimeMillis(),
             priority = priority
         )
+
         _allTasks.value = updated
         updateTasks()
     }

@@ -36,7 +36,7 @@ class TaskAdapter(
         holder.tvPriority.text = when (task.priority) {
             1 -> "Приоритет: 1"
             2 -> "Приоритет: 2"
-            3 -> "Приоритет: 3"Ц
+            3 -> "Приоритет: 3"
             else -> "Приоритет: неизвестно"
         }
 
