@@ -1,39 +1,39 @@
 package com.example.lab3
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.TextView
-
 import androidx.recyclerview.widget.RecyclerView
 
 class TaskAdapter(
-    private var tasks: List<String>,
-    private val onDeleteClick: (Int) -> Unit
+    private var tasks: List<Task>,
+    private val onDeleteClick: (Int) -> Unit,
+    private val onToggleClick: (Int) -> Unit
 ) : RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvTask: TextView = view.findViewById(R.id.tvName)   // или tvTask
+        val tvTask: TextView = view.findViewById(R.id.tvTask)
+        val cbDone: CheckBox = view.findViewById(R.id.cbDone)
         val btnDelete: Button = view.findViewById(R.id.btnDelete)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_user, parent, false)
+            .inflate(R.layout.item_task, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.tvTask.text = tasks[position]
+        val task = tasks[position]
+        holder.tvTask.text = task.title
+        holder.cbDone.isChecked = task.isDone
 
-        holder.itemView.setOnClickListener {
-            val context = holder.itemView.context
-            val intent = Intent(context, DetailActivity::class.java).apply {
-                putExtra("TASK_TEXT", tasks[position]) }
-            context.startActivity(intent)
+        holder.cbDone.setOnClickListener {
+            onToggleClick(position)
         }
 
         holder.btnDelete.setOnClickListener {
@@ -41,10 +41,10 @@ class TaskAdapter(
         }
     }
 
-    override fun getItemCount() = tasks.size
+    override fun getItemCount(): Int = tasks.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateList(newList: List<String>) {
+    fun updateList(newList: List<Task>) {
         tasks = newList
         notifyDataSetChanged()
     }
