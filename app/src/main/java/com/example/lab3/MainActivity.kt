@@ -35,18 +35,18 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
-        viewModel.filteredTasks.observe(this) { taskList ->
+        viewModel.visibleTasks.observe(this) { taskList ->
             adapter.updateList(taskList)
         }
 
         findViewById<Button>(R.id.btnAddTask).setOnClickListener {
             val taskText = "Задача ${Random.nextInt(100)}"
-            viewModel.addTask(taskText)
+            val priority = Random.nextInt(1, 4)
+            viewModel.addTask(taskText, priority)
         }
 
         val spinner = findViewById<Spinner>(R.id.spinnerFilter)
         val spinnerItems = listOf("Все", "Выполненные", "Активные")
-
         val spinnerAdapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_item,
@@ -65,6 +65,18 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        findViewById<Button>(R.id.btnSortName).setOnClickListener {
+            viewModel.setSort(SortType.BY_NAME)
+        }
+
+        findViewById<Button>(R.id.btnSortDate).setOnClickListener {
+            viewModel.setSort(SortType.BY_DATE)
+        }
+
+        findViewById<Button>(R.id.btnSortPriority).setOnClickListener {
+            viewModel.setSort(SortType.BY_PRIORITY)
         }
     }
 }

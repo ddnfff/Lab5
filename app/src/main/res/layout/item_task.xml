@@ -18,9 +18,17 @@
         android:layout_marginStart="8dp"
         android:textSize="12sp" />
 
+    <TextView
+        android:id="@+id/tvPriority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:text="Приоритет: 1" />
+
     <Button
         android:id="@+id/btnDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="12sp"
         android:text="Удалить" />
 </LinearLayout>

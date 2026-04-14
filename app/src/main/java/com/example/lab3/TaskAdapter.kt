@@ -18,6 +18,7 @@ class TaskAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvTask: TextView = view.findViewById(R.id.tvTask)
         val cbDone: CheckBox = view.findViewById(R.id.cbDone)
+        val tvPriority: TextView = view.findViewById(R.id.tvPriority)
         val btnDelete: Button = view.findViewById(R.id.btnDelete)
     }
 
@@ -31,6 +32,7 @@ class TaskAdapter(
         val task = tasks[position]
         holder.tvTask.text = task.title
         holder.cbDone.isChecked = task.isDone
+        holder.tvPriority.text = "Приоритет: ${task.priority}"
 
         holder.cbDone.setOnClickListener {
             onToggleClick(position)
@@ -41,7 +43,7 @@ class TaskAdapter(
         }
     }
 
-    override fun getItemCount(): Int = tasks.size
+    override fun getItemCount() = tasks.size
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateList(newList: List<Task>) {
