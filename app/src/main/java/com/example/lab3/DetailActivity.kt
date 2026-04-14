@@ -2,6 +2,7 @@ package com.example.lab3
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -13,9 +14,13 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        // 3. Обработка кнопки "Назад"
+        val taskText = intent.getStringExtra("TASK_TEXT") ?: "Без имени"
+
+        // если в layout есть TextView, например:
+        findViewById<TextView>(R.id.tvTaskDetail).text = taskText
+
         findViewById<Button>(R.id.btnBack).setOnClickListener {
-            finish() // Закрываем текущую Activity
+            finish()
         }
     }
 }
